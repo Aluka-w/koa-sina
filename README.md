@@ -43,10 +43,73 @@ router.get('/profile/:username/:page', async function (ctx, next) {
 
 ### ejs
 
-1. 概念: 服务端模板渲染引擎, 类似的有jade, art-template
+概念: 服务端模板渲染引擎, 类似的有 jade, art-template
 
-#### 变量
+#### ejs 语法
 
-#### 判断和循环
+1. server 服务器
 
-#### 引用组件
+```js
+// app.js中已经配置ejs模板引擎指向
+router.get('/', async (ctx, next) => {
+  // 指向ejs index, 传递变量title
+  await ctx.render('index', {
+    title: 'Hello Koa 2!',
+    isMe: false,
+    blogList: [
+      {
+        id: 1,
+        title: '11'
+      },
+      {
+        id: 2,
+        title: '22'
+      },
+    ]
+  })
+})
+```
+
+##### 变量
+
+```ejs
+  <h1><%= title %></h1>
+  <!-- 不确定是否传的locals, 到时候解析为空 -->
+  <h1><%= locals.name %></h1>
+```
+
+##### 判断
+
+ejs 模板使用判断和循环
+
+```ejs
+  <div>
+    <% if (isMe) { %>
+      <h1><%= title %></h1>
+    <% } else {%>
+      <h1>测试</h1>
+    <% } %>
+  </div>
+```
+
+##### 引用组件
+
+```ejs
+  <!-- 引入组件的路径 -->
+  <%- include('view/index', {
+    <!-- 传递到子组件参数 -->
+    isMe
+  }) %>
+```
+
+##### 循环
+
+```ejs
+  <ul>
+    <% blogList.forEach(blog => { %>
+      <li><%= blog.title %></li>
+    <% }) %>
+  </ul>
+```
+
+> ejs组件内部(html)可以使用 script标签写js, ejs本质就是SSR(服务端渲染)
