@@ -8,6 +8,14 @@
 4. 登录技术(session vs jwt)
 5. 缓存数据库(redis)
 6. 单元测试(jest)
+7. 涉及到的安装包
+
+```txt
+  1. cross-env: 环境变量
+  2. redis: redis连接
+  3. koa-redis: koa连接redis
+  4. koa-generic-session: koa生成session的工具
+```
 
 ### KOA2
 
@@ -31,9 +39,9 @@
 
 ```js
 // 前置路由
-router.prefix('/api')
+router.prefix("/api")
 // 动态路由
-router.get('/profile/:username/:page', async function (ctx, next) {
+router.get("/profile/:username/:page", async function (ctx, next) {
   // 获取动态路由参数
   const { username, page } = ctx.params
   ctx.body = { username, page }
@@ -51,19 +59,19 @@ router.get('/profile/:username/:page', async function (ctx, next) {
 
 ```js
 // app.js中已经配置ejs模板引擎指向
-router.get('/', async (ctx, next) => {
+router.get("/", async (ctx, next) => {
   // 指向ejs index, 传递变量title
-  await ctx.render('index', {
-    title: 'Hello Koa 2!',
+  await ctx.render("index", {
+    title: "Hello Koa 2!",
     isMe: false,
     blogList: [
       {
         id: 1,
-        title: '11',
+        title: "11",
       },
       {
         id: 2,
-        title: '22',
+        title: "22",
       },
     ],
   })
@@ -226,13 +234,13 @@ ejs 模板使用判断和循环
 
    ```js
    // seq.js
-   const Sequelize = require('sequelize')
+   const Sequelize = require("sequelize")
    const conf = {
-     host: 'localhost',
-     dialect: 'mysql', // 声明数据库类型
+     host: "localhost",
+     dialect: "mysql", // 声明数据库类型
    }
    // 数据库名, 账户, 密码
-   const seq = new Sequelize('sina', 'root', 'het@123', conf)
+   const seq = new Sequelize("sina", "root", "het@123", conf)
    module.exports = seq
    ```
 
@@ -256,4 +264,39 @@ conf.poor = {
   min: 0,
   idle: 1000, // 如果一个连接池 10s之内没有被使用, 就被释放
 }
+```
+
+## 项目
+
+### session-cookie 配置
+
+1. 概念:
+   1. 通过`koa-generic-session`和`koa-redis`, session 和 redis 能数据互通
+   2. 设置 session 时, 数据自动同步到 redis 中, 同时也会设置 cookie
+   3. cookie 中的 koa.sid -> 对应到 session 数据 -> 缓存到 redis 中 weibo.sess
+   4. 判断登录, 就看 redis 中是否缓存有 username, 未登录时, 只存储 cookie 基础数据
+
+```js
+// 引入
+const session = require("koa-generic-session") // 生成session
+const redisStore = require("koa-redis") // 连接redis
+const { REDIS_CONF } = require("./conf/db")
+
+// session 配置, 需在router之前
+app.keys = ["123"] // 密钥
+app.use(
+  session({
+    key: "weibo.sid", // cookie 的id 默认是koa.sid
+    prefix: "weibo.sess", // redis key 的前缀, 默认 koa:sess
+    cookie: {
+      path: "/",
+      httpOnly: true,
+      maxAge: 24 * 60 * 60 * 1000, // ms
+    },
+    // ttl: 24 * 60 * 60 * 1000, // redis 过期时间, 默认跟cookie过期时间一致
+    store: redisStore({
+      all: `${REDIS_CONF.host}:${REDIS_CONF.port}`,
+    }),
+  })
+)
 ```
