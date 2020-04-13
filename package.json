@@ -6,12 +6,13 @@
     "start": "node bin/www",
     "dev": "cross-env NODE_ENV=dev ./node_modules/.bin/nodemon bin/www",
     "prd": "cross-env NODE_ENV=production pm2 start bin/www",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "cross-env NODE_ENV=dev jest --runInBand --forceExit --colors"
   },
   "dependencies": {
     "cross-env": "^7.0.2",
     "debug": "^4.1.1",
     "ejs": "~2.3.3",
+    "jest": "^25.3.0",
     "koa": "^2.7.0",
     "koa-bodyparser": "^4.2.1",
     "koa-convert": "^1.2.0",

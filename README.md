@@ -15,6 +15,7 @@
   2. redis: redis连接
   3. koa-redis: koa连接redis
   4. koa-generic-session: koa生成session的工具
+  5. jest: 开发环境下, 测试用例
 ```
 
 ### KOA2
@@ -265,6 +266,25 @@ conf.poor = {
   idle: 1000, // 如果一个连接池 10s之内没有被使用, 就被释放
 }
 ```
+
+### jest(单元测试)
+
+1. 概念: 单个功能/接口, 给定输入, 得到输出, 看输出是否复合要求
+
+   ```js
+     // yarn add jest
+     // package.json -> scripts
+     // runInBand: 按顺序执行
+     // forceExit: 强制退出
+     // colors: 按颜色输出, 可视化更好
+     "test": "cross-env NODE_ENV=dev jest --runInBand --forceExit --colors"
+   ```
+
+2. 测试用例文件必须 `*.test.js`结尾
+
+3. 常用断言
+
+4. 测试 http 接口
 
 ## 项目
 
