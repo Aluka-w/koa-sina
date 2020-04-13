@@ -15,6 +15,5 @@ seq.authenticate().then(() => {
 // 执行同步
 // 强制覆盖原有同名的表
 seq.sync({ force: true }).then(() => {
-  console.log('ok')
   process.exit()
 })

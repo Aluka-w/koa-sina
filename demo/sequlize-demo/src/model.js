@@ -58,9 +58,6 @@ User.hasMany(Blog, {
 // 两种方法都是外键关联, 可同时存在, 区别在于
 // Blog.belongsTo(User), 查询Blog会自动带出User信息
 // User.hasMany(Blog), 查询User会自动带出Blog信息
-
-
-
 module.exports = {
   User,
   Blog

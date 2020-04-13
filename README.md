@@ -190,24 +190,25 @@ ejs 模板使用判断和循环
 
 #### 外键
 
-1. 创建外键
+1. 创建外键(表和表建立连接)
 
-   概念: 表和表建立连接
-
-2. 更新限制 & 删除级联
+2. 更新限制 & 删除级联 & 连表查询
 
    ```txt
        更新限制: 更新blogs的userid为一个users表中不存在的id, 更新不成功
        删除级联: 删除users中的某个用户, 用户关联的博客也会删除
+       连表查询: 可以把连表数据一起查询
    ```
 
-3. 连表查询
+![mysql建立外键]('./image/foreign.png')
 
-概念: 两个表数据一起查出来
+#### 导出 ER 图
+
+![ER图]('./image/er.png')
 
 ### sequelize(ORM 工具)
 
-1. 概念: 对象关系映射, 通过操作对象的方式, 操作数据库
+1. 概念: 对象关系映射, 通过操作对象的方式, 操作数据库(就是为了操作数据库)
 
    ```txt
      1. 数据表(table), 用js中的模型(class或对象) 代替
@@ -217,8 +218,42 @@ ejs 模板使用判断和循环
 
 2. 安装: `yarn add mysql2 sequlize`
 
-#### 建模(外键) & 同步到数据库 (ER图)
+3. 例子: demo -> sequelize-demo
 
-#### 增删改查 & 连表查询
+#### 建模/建表(外键) & 同步到数据库
 
-#### sequelize连接池
+1. 创建 sequelize 对象
+
+   ```js
+   // seq.js
+   const Sequelize = require('sequelize')
+   const conf = {
+     host: 'localhost',
+     dialect: 'mysql', // 声明数据库类型
+   }
+   // 数据库名, 账户, 密码
+   const seq = new Sequelize('sina', 'root', 'het@123', conf)
+   module.exports = seq
+   ```
+
+2. 建模(建表 + 外键)
+
+3. 同步到数据库
+
+#### 增删改查(CRUD) & 连表查询
+
+#### sequelize 连接池
+
+1. 概念: 维持稳定数量的 sql 连接, 避免断/开反复的情况, 有助于系统稳定
+
+2. 配置
+
+```js
+// 连接池配置, 线上环境, 比较稳定
+// 开发环境需要暴露问题
+conf.poor = {
+  max: 5, // 连接池可连接的最大数量
+  min: 0,
+  idle: 1000, // 如果一个连接池 10s之内没有被使用, 就被释放
+}
+```
