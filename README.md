@@ -200,11 +200,11 @@ ejs 模板使用判断和循环
        连表查询: 可以把连表数据一起查询
    ```
 
-![mysql建立外键]('./image/foreign.png')
+    <img src="./image/foreign.png" alt="mysql建外键" width="50%">
 
 #### 导出 ER 图
 
-![ER图]('./image/er.png')
+  <img src="./image/er.png" alt="mysql导出ER图" width="50%">
 
 ### sequelize(ORM 工具)
 
