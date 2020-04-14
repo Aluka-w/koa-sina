@@ -16,6 +16,11 @@
   3. koa-redis: koa连接redis
   4. koa-generic-session: koa生成session的工具
   5. jest: 开发环境下, 测试用例
+  6. supertest: 开发环境下, 测试http接口
+  7. mysql2: 连接mysql
+  8. sequelize: orm工具, 对象关系映射, 操作mysql工具
+  9. eslint: 代码规范
+  10. pre-commit: 不符合eslint规范的, 不给于提交(项目工程化)
 ```
 
 ### KOA2
@@ -285,6 +290,10 @@ conf.poor = {
 3. 常用断言
 
 4. 测试 http 接口
+
+### koa开发环境的搭建
+
+
 
 ## 项目
 

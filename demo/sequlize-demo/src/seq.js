@@ -1,3 +1,6 @@
+/**
+ * @description sequelize 实例
+ */
 const Sequelize = require('sequelize')
 const conf = {
   host: 'localhost',
