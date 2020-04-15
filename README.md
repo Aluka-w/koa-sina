@@ -21,6 +21,8 @@
   8. sequelize: orm工具, 对象关系映射, 操作mysql工具
   9. eslint: 代码规范
   10. pre-commit: 不符合eslint规范的, 不给于提交(项目工程化)
+  11. koa-jwt: jwt的实现, token的验证
+  12. jsonwebtoken: 实现用户数据的在server端的加密解密过程
 ```
 
 ### KOA2
@@ -291,9 +293,7 @@ conf.poor = {
 
 4. 测试 http 接口
 
-### koa开发环境的搭建
-
-
+### koa 开发环境的搭建
 
 ## 项目
 
@@ -328,4 +328,79 @@ app.use(
     }),
   })
 )
+```
+
+### JWT
+
+1. 概念: json web token (jwt-demo)
+
+   ```txt
+     1. 用户认证成功之后, server端返回一个加密的token给客户端
+     2. 客户端后续每次请求都带token, 以示用户身份
+     3. 客户端每次请求, 都把token带上, 放在header authorization中
+     4. 用户信息存储在客户端, 故而不需要redis做用户信息缓存
+   ```
+
+2. koa2 实现 jwt
+
+   ```js
+   // yarn add koa-jwt 实现token验证, 即jwt
+   // yarn add jsonwebtoken 实现token(用户数据)的加密解密
+
+   // 第一步 app.js  使用jwt
+    const jwtKoa = require("koa-jwt")
+    const { SECRET } = require("./conf/constant")
+
+    app.use(
+      jwtKoa({
+        secret: SECRET, // 密钥
+      }).unless({
+        path: [/^\/users\/login/], // 自定义哪些目录忽略jwt验证
+      })
+    )
+
+    // 第二步 用户认证成功之后, server端返回一个加密的token给客户端
+    // user.js 实现token(用户数据)的加密/解密
+    const router = require("koa-router")()
+    const jwt = require('jsonwebtoken') // token加密工具
+    const { SECRET } = require('../conf/constant')
+    const util = require('util') // node js自带的工具
+    const verify = util.promisify(jwt.verify) // 把jwt加工成promise的方式
+    // 伪代码, 登录成功, 拿到userInfo
+    router.post("/login", async (ctx, next) => {
+      let token
+      if (userInfo) {
+        // 设置token, 用户信息, 密钥. 过期时间
+        token = jwt.sign(userInfo, SECRET, { expiresIn: '1h' })
+      }
+      // 返回token
+      ctx.body = {
+        errno: -0,
+        data: token,
+      }
+    })
+
+    // 第三步 能把客户端返回的token解析成未加密的用户信息
+    // 客户端每次请求token 都放在header的 authorization中
+    const token = ctx.header.authorization
+    try {
+      const payload = await verify(token.split(' ')[1], SECRET)
+      ctx.body = {
+        errno: 0,
+        userInfo: payload
+      }
+    } catch (error) {}
+   ```
+
+3. jwt 和 session-cookie 异同
+
+```txt
+区别
+  jwt: 用户信息加密存储在客户端, 不依赖cookie, 可跨域, 更适合服务节点多
+      不需要redis工具, 登录未过期之前, 服务端无法清除登录
+
+  session-cookie: 用户信息存储在服务端, 依赖cookie, 不可跨域, 适合统一web服务, server端严格管理用户信息
+
+共同
+  实现登录验证, 大型系统中两者可共用, 并无明显好坏
 ```
