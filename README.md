@@ -338,6 +338,7 @@ app.use(
      1. 用户认证成功之后, server端返回一个加密的token给客户端
      2. 客户端后续每次请求都带token, 以示用户身份
      3. 客户端每次请求, 都把token带上, 放在header authorization中
+     4. 未带上token, 或者token过期的, 服务端返回401, 没有权限
      4. 用户信息存储在客户端, 故而不需要redis做用户信息缓存
    ```
 
