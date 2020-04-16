@@ -1,4 +1,4 @@
-# KOA2(仿新浪)
+# KOA2(仿微博)
 
 ## 技术选型
 
@@ -10,20 +10,20 @@
 6. 单元测试(jest)
 7. 涉及到的安装包
 
-```txt
-  1. cross-env: 环境变量
-  2. redis: redis连接
-  3. koa-redis: koa连接redis
-  4. koa-generic-session: koa生成session的工具
-  5. jest: 开发环境下, 测试用例
-  6. supertest: 开发环境下, 测试http接口
-  7. mysql2: 连接mysql
-  8. sequelize: orm工具, 对象关系映射, 操作mysql工具
-  9. eslint: 代码规范
-  10. pre-commit: 不符合eslint规范的, 不给于提交(项目工程化)
-  11. koa-jwt: jwt的实现, token的验证
-  12. jsonwebtoken: 实现用户数据的在server端的加密解密过程
-```
+   ```txt
+     1. cross-env: 环境变量
+     2. redis: redis连接
+     3. koa-redis: koa连接redis
+     4. koa-generic-session: koa生成session的工具
+     5. jest: 开发环境下, 测试用例
+     6. supertest: 开发环境下, 测试http接口
+     7. mysql2: 连接mysql
+     8. sequelize: orm工具, 对象关系映射, 操作mysql工具
+     9. eslint: 代码规范
+     10. pre-commit: 不符合eslint规范的, 不给于提交(项目工程化)
+     11. koa-jwt: jwt的实现, token的验证
+     12. jsonwebtoken: 实现用户数据的在server端的加密解密过程
+   ```
 
 ### KOA2
 
@@ -47,9 +47,9 @@
 
 ```js
 // 前置路由
-router.prefix("/api")
+router.prefix('/api')
 // 动态路由
-router.get("/profile/:username/:page", async function (ctx, next) {
+router.get('/profile/:username/:page', async function (ctx, next) {
   // 获取动态路由参数
   const { username, page } = ctx.params
   ctx.body = { username, page }
@@ -67,19 +67,19 @@ router.get("/profile/:username/:page", async function (ctx, next) {
 
 ```js
 // app.js中已经配置ejs模板引擎指向
-router.get("/", async (ctx, next) => {
+router.get('/', async (ctx, next) => {
   // 指向ejs index, 传递变量title
-  await ctx.render("index", {
-    title: "Hello Koa 2!",
+  await ctx.render('index', {
+    title: 'Hello Koa 2!',
     isMe: false,
     blogList: [
       {
         id: 1,
-        title: "11",
+        title: '11',
       },
       {
         id: 2,
-        title: "22",
+        title: '22',
       },
     ],
   })
@@ -222,6 +222,14 @@ ejs 模板使用判断和循环
 
   <img src="./image/er.png" alt="mysql导出ER图" width="50%">
 
+#### 关系型数据库 三大范式
+
+1. 属性的原子性: 每一列都不可再拆解(字段明晰)
+
+2. 记录的唯一性: 有唯一标识(主键), 其他属性都依赖主键
+
+3. 字段的冗余性: 不存在数据冗余和传递依赖(通过外键连接数据)
+
 ### sequelize(ORM 工具)
 
 1. 概念: 对象关系映射, 通过操作对象的方式, 操作数据库(就是为了操作数据库)
@@ -242,13 +250,13 @@ ejs 模板使用判断和循环
 
    ```js
    // seq.js
-   const Sequelize = require("sequelize")
+   const Sequelize = require('sequelize')
    const conf = {
-     host: "localhost",
-     dialect: "mysql", // 声明数据库类型
+     host: 'localhost',
+     dialect: 'mysql', // 声明数据库类型
    }
    // 数据库名, 账户, 密码
-   const seq = new Sequelize("sina", "root", "het@123", conf)
+   const seq = new Sequelize('sina', 'root', 'het@123', conf)
    module.exports = seq
    ```
 
@@ -293,10 +301,6 @@ conf.poor = {
 
 4. 测试 http 接口
 
-### koa 开发环境的搭建
-
-## 项目
-
 ### session-cookie 配置
 
 1. 概念:
@@ -307,18 +311,18 @@ conf.poor = {
 
 ```js
 // 引入
-const session = require("koa-generic-session") // 生成session
-const redisStore = require("koa-redis") // 连接redis
-const { REDIS_CONF } = require("./conf/db")
+const session = require('koa-generic-session') // 生成session
+const redisStore = require('koa-redis') // 连接redis
+const { REDIS_CONF } = require('./conf/db')
 
 // session 配置, 需在router之前
-app.keys = ["123"] // 密钥
+app.keys = ['123'] // 密钥
 app.use(
   session({
-    key: "weibo.sid", // cookie 的id 默认是koa.sid
-    prefix: "weibo.sess", // redis key 的前缀, 默认 koa:sess
+    key: 'weibo.sid', // cookie 的id 默认是koa.sid
+    prefix: 'weibo.sess', // redis key 的前缀, 默认 koa:sess
     cookie: {
-      path: "/",
+      path: '/',
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000, // ms
     },
@@ -349,48 +353,48 @@ app.use(
    // yarn add jsonwebtoken 实现token(用户数据)的加密解密
 
    // 第一步 app.js  使用jwt
-    const jwtKoa = require("koa-jwt")
-    const { SECRET } = require("./conf/constant")
+   const jwtKoa = require('koa-jwt')
+   const { SECRET } = require('./conf/constant')
 
-    app.use(
-      jwtKoa({
-        secret: SECRET, // 密钥
-      }).unless({
-        path: [/^\/users\/login/], // 自定义哪些目录忽略jwt验证
-      })
-    )
+   app.use(
+     jwtKoa({
+       secret: SECRET, // 密钥
+     }).unless({
+       path: [/^\/users\/login/], // 自定义哪些目录忽略jwt验证
+     })
+   )
 
-    // 第二步 用户认证成功之后, server端返回一个加密的token给客户端
-    // user.js 实现token(用户数据)的加密/解密
-    const router = require("koa-router")()
-    const jwt = require('jsonwebtoken') // token加密工具
-    const { SECRET } = require('../conf/constant')
-    const util = require('util') // node js自带的工具
-    const verify = util.promisify(jwt.verify) // 把jwt加工成promise的方式
-    // 伪代码, 登录成功, 拿到userInfo
-    router.post("/login", async (ctx, next) => {
-      let token
-      if (userInfo) {
-        // 设置token, 用户信息, 密钥. 过期时间
-        token = jwt.sign(userInfo, SECRET, { expiresIn: '1h' })
-      }
-      // 返回token
-      ctx.body = {
-        errno: -0,
-        data: token,
-      }
-    })
+   // 第二步 用户认证成功之后, server端返回一个加密的token给客户端
+   // user.js 实现token(用户数据)的加密/解密
+   const router = require('koa-router')()
+   const jwt = require('jsonwebtoken') // token加密工具
+   const { SECRET } = require('../conf/constant')
+   const util = require('util') // node js自带的工具
+   const verify = util.promisify(jwt.verify) // 把jwt加工成promise的方式
+   // 伪代码, 登录成功, 拿到userInfo
+   router.post('/login', async (ctx, next) => {
+     let token
+     if (userInfo) {
+       // 设置token, 用户信息, 密钥. 过期时间
+       token = jwt.sign(userInfo, SECRET, { expiresIn: '1h' })
+     }
+     // 返回token
+     ctx.body = {
+       errno: -0,
+       data: token,
+     }
+   })
 
-    // 第三步 能把客户端返回的token解析成未加密的用户信息
-    // 客户端每次请求token 都放在header的 authorization中
-    const token = ctx.header.authorization
-    try {
-      const payload = await verify(token.split(' ')[1], SECRET)
-      ctx.body = {
-        errno: 0,
-        userInfo: payload
-      }
-    } catch (error) {}
+   // 第三步 能把客户端返回的token解析成未加密的用户信息
+   // 客户端每次请求token 都放在header的 authorization中
+   const token = ctx.header.authorization
+   try {
+     const payload = await verify(token.split(' ')[1], SECRET)
+     ctx.body = {
+       errno: 0,
+       userInfo: payload,
+     }
+   } catch (error) {}
    ```
 
 3. jwt 和 session-cookie 异同
@@ -405,3 +409,46 @@ app.use(
 共同
   实现登录验证, 大型系统中两者可共用, 并无明显好坏
 ```
+
+### koa 开发环境的搭建
+
+## 项目
+
+### 项目设计
+
+1. 架构图
+
+    <img src="./image/system.png" alt="系统架构图" width="60%">
+
+2. 页面设计图
+
+    <img src="./image/page.png" alt="页面" width="40%">
+
+3. 路由设计
+    <div style="overflow: hidden">
+      <img src="./image/user-router.png" alt="用户路由" width="30%" style="float: left">
+
+      <img src="./image/blog-router.png" alt="微博路由" width="34%" style="float: left">
+    </div>
+
+4. 数据模型设计(ER图)
+
+    <img src="./image/sql.png" alt="页面" width="60%">
+
+### 用户管理(登录注册)
+
+### 用户设置(基本信息, 修改密码, 退出登录)
+
+### 创建微博
+
+### 个人主页
+
+### 广场页(缓存)
+
+### 关注和取消关注
+
+### 首页
+
+### @ 和回复
+
+### @ 提到我
