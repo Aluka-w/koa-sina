@@ -437,6 +437,8 @@ app.use(
 
 ### 用户管理(登录注册)
 
+1. git checkout -b feature-login
+
 ### 用户设置(基本信息, 修改密码, 退出登录)
 
 ### 创建微博
