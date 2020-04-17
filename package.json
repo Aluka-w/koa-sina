@@ -9,6 +9,7 @@
     "test": "cross-env NODE_ENV=dev jest --runInBand --forceExit --colors"
   },
   "dependencies": {
+    "@types/sequelize": "^4.28.8",
     "cross-env": "^7.0.2",
     "debug": "^4.1.1",
     "ejs": "~2.3.3",

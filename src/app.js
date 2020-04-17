@@ -9,8 +9,9 @@ const session = require("koa-generic-session")
 const redisStore = require("koa-redis")
 const { REDIS_CONF } = require("./conf/db")
 
-const user = require("./routes/view/user")
-// const error = require("./routes/view/error")
+const userViewRouter = require("./routes/view/user")
+const userApiRouter = require("./routes/api/user")
+const errorViewRouter = require("./routes/view/error")
 
 // error handler
 onerror(app)
@@ -57,8 +58,9 @@ app.use(
 )
 
 // routes
-app.use(user.routes(), user.allowedMethods())
-// app.use(error.routes(), error.allowedMethods())
+app.use(userViewRouter.routes(), userViewRouter.allowedMethods())
+app.use(userApiRouter.routes(), userApiRouter.allowedMethods())
+app.use(errorViewRouter.routes(), errorViewRouter.allowedMethods()) // error 404的路由一定在最后
 
 // error-handling
 app.on("error", (err, ctx) => {
