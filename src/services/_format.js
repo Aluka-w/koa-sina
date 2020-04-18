@@ -3,14 +3,16 @@
  * @author Matt
  */
 
+const { DEFAULT_PICTURE } = require('../conf/constant')
+
 /**
  * 用户默认头像
  * @param {Object} obj 用户对象
  */
 function _formatUserPicture(obj) {
-  // 
+  //
   if (obj.picture == null) {
-    obj.picture = 'xxx'
+    obj.picture = DEFAULT_PICTURE
   }
   return obj
 }
@@ -32,5 +34,5 @@ function formatUser(list) {
 }
 
 module.exports = {
-  formatUser
+  formatUser,
 }

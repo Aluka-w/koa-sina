@@ -3,6 +3,7 @@
  * @author Matt
  */
 const { User } = require('../db/modal/index')
+const { formatUser } = require('./_format')
 
 /**
  * 获取用户信息
@@ -19,9 +20,6 @@ async function getUserInfo(userName, password) {
   }
 
   // 查询
-  // const result = await User.findOne({
-  //   attr
-  // })
   const result = await User.findOne({
     attributes: ['id', 'userName', 'nickName', 'picture', 'city'],
     where: whereOpt
@@ -30,9 +28,7 @@ async function getUserInfo(userName, password) {
     // 未找到
     return result
   }
-
-  // 格式化的处理
-  return result.dataValues
+  return formatUser(result.dataValues)
 }
 
 module.exports = {
