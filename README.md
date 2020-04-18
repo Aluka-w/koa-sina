@@ -23,6 +23,7 @@
      10. pre-commit: 不符合eslint规范的, 不给于提交(项目工程化)
      11. koa-jwt: jwt的实现, token的验证
      12. jsonwebtoken: 实现用户数据的在server端的加密解密过程
+     13: ajv: Another JSON Schema Validator, 校验规则
    ```
 
 ### KOA2
@@ -438,6 +439,15 @@ app.use(
 ### 用户管理(登录注册)
 
 1. git checkout -b feature-login
+
+2. ajv的使用
+
+```js
+  // schema: 校验规则
+  // data: 需要校验的数据
+  var valid = ajv.validate(schema, data);
+  if (!valid) console.log(ajv.errors);
+```
 
 ### 用户设置(基本信息, 修改密码, 退出登录)
 
