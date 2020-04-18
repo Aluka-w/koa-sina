@@ -13,16 +13,15 @@ const { formatUser } = require('./_format')
 async function getUserInfo(userName, password) {
   // 查询条件
   const whereOpt = {
-    userName
+    userName,
   }
   if (password) {
     Object.assign(whereOpt, { password })
   }
-
   // 查询
   const result = await User.findOne({
     attributes: ['id', 'userName', 'nickName', 'picture', 'city'],
-    where: whereOpt
+    where: whereOpt,
   })
   if (result == null) {
     // 未找到
@@ -31,6 +30,24 @@ async function getUserInfo(userName, password) {
   return formatUser(result.dataValues)
 }
 
+/**
+ * 创建用户
+ * @param {string} userName 用户名
+ * @param {string} password 密码
+ * @param {number} gender 性别
+ * @param {string} nickName 昵称
+ */
+async function createUser({ userName, password, gender = 3, nickName }) {
+  const result = await User.create({
+    userName,
+    password,
+    nickName: nickName ? nickName : userName,
+    gender,
+  })
+  return result.dataValues
+}
+
 module.exports = {
-  getUserInfo
+  getUserInfo,
+  createUser
 }
