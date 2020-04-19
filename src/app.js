@@ -9,13 +9,22 @@ const session = require("koa-generic-session")
 const redisStore = require("koa-redis")
 const { REDIS_CONF } = require("./conf/db")
 const { SEESION_SECRET_KEY } = require('./conf/secretKeys')
+const { isProd } = require('./util/env')
 
+// 路由
+const index = require('./routes/index')
 const userViewRouter = require("./routes/view/user")
 const userApiRouter = require("./routes/api/user")
 const errorViewRouter = require("./routes/view/error")
 
 // error handler
-onerror(app)
+let onerrorConf = {}
+if (isProd) {
+    onerrorConf = {
+        redirect: '/error'
+    }
+}
+onerror(app, onerrorConf)
 
 // middlewares
 app.use(
@@ -59,6 +68,7 @@ app.use(
 )
 
 // routes
+app.use(index.routes(), index.allowedMethods())
 app.use(userViewRouter.routes(), userViewRouter.allowedMethods())
 app.use(userApiRouter.routes(), userApiRouter.allowedMethods())
 app.use(errorViewRouter.routes(), errorViewRouter.allowedMethods()) // error 404的路由一定在最后
