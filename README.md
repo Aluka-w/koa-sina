@@ -42,6 +42,8 @@
   4. ctx.params
   5. ctx.session
   6. ctx.cookies
+  7. ctx.redirect: 重定向
+  8. ctx.url
 ```
 
 #### koa2 路由
