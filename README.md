@@ -250,7 +250,7 @@ ejs 模板使用判断和循环
 1. 创建 sequelize 对象
 
    ```js
-   // seq.js
+   // seq.js 创建sequelize对象
    const Sequelize = require('sequelize')
    const conf = {
      host: 'localhost',
@@ -263,9 +263,224 @@ ejs 模板使用判断和循环
 
 2. 建模(建表 + 外键)
 
+   ```js
+   const Sequelize = require('sequelize')
+   const seq = require('./seq')
+
+   // 模型就是建表
+
+   // 创建 User 模型(相当于mysql手动建表)
+   // 表名会自动返回 users
+   const User = seq.define('user', {
+     // id 自动创建, 自增, 自动设置为主键
+     userName: {
+       type: Sequelize.STRING, // 对应sql的varchar(255)
+       allowNull: false,
+     },
+     password: {
+       type: Sequelize.STRING,
+       allowNull: false,
+     },
+     nickName: {
+       type: Sequelize.STRING,
+       allowNull: false,
+       common: '昵称',
+     },
+     // 自动创建 createAt
+     // 自动创建 updateAt
+   })
+
+   // 创建 Blog 模型
+   const Blog = seq.define('blog', {
+     title: {
+       type: Sequelize.STRING,
+       allowNull: false,
+       comment: '标题',
+     },
+     content: {
+       type: Sequelize.TEXT,
+       allowNull: false,
+     },
+     userId: {
+       type: Sequelize.INTEGER,
+       allowNull: false,
+     },
+   })
+
+   // 外键关联
+   // 多对一, 默认就会关联User的id
+   Blog.belongsTo(User, {
+     // 创建外键 Blog.userId -> User.id
+     foreignKey: 'userId',
+   })
+   // 这种语法, 也会隐形的创建userId, 并且关联
+   // Blog.belongsTo(User)
+
+   // 与上一致
+   User.hasMany(Blog, {
+     foreignKey: 'userId',
+   })
+
+   // 两种方法都是外键关联, 可同时存在, 区别在于
+   // Blog.belongsTo(User), 查询Blog会自动带出User信息
+   // User.hasMany(Blog), 查询User会自动带出Blog信息
+   module.exports = {
+     User,
+     Blog,
+   }
+   ```
+
 3. 同步到数据库
 
+   ```js
+   // sync 同步到数据库
+   const seq = require('./seq')
+   require('./model')
+
+   // 测试连接
+   seq
+     .authenticate()
+     .then(() => {
+       console.log('连接成功')
+     })
+     .catch((err) => {
+       console.log('连接失败')
+     })
+
+   // 强制执行, 会直接覆盖原有的table
+   // 执行完, 退出程序
+   seq.sync({ force: true }).then(() => {
+     process.exit()
+   })
+   ```
+
 #### 增删改查(CRUD) & 连表查询
+
+1. 增
+
+   ```js
+   const { User } = require('./model')
+   !(async function () {
+     // 创建用户
+     // 类比: inset into users () values ()
+     const zhangsan = await User.create({
+       userName: 'zhangsan',
+       password: '123',
+       nickName: '张三',
+     })
+     // dataValues 获取插入之后数据信息
+     const zhangsanId = zhangsan.dataValues.id
+   })()
+   ```
+
+2. 查
+
+   ```js
+   // 查询特定的列
+   const zhangsanName = await User.findOne({
+     attributes: ['username', 'nickName'],
+     where: { userName: 'zhangsan' },
+   })
+   console.log('zhangsanName', zhangsanName.dataValues)
+
+   // 查询列表
+   const zhangsanBlogList = await Blog.findAll({
+     where: { userId: 2 },
+     order: [['id', 'desc']],
+   })
+
+   // 分页
+   const blogPageList = await Blog.findAll({
+     limit: 1, // 限制本次查询 1条
+     offset: 1, // 本次跳过0条
+     order: [['id', 'desc']], // 排序
+   })
+   console.log(
+     'blogPageList',
+     blogPageList.map((blog) => blog.dataValues)
+   )
+
+   // 查询总数
+   const blogListAndCount = await Blog.findAndCountAll({
+     limit: 1, // 限制本次查询 1条
+     offset: 0, // 本次跳过0条
+     order: [['id', 'desc']], // 排序
+   })
+   console.log(
+     'blogListAndCount',
+     blogListAndCount.count, // 总数, 不考虑分页
+     // 查询出来的页面
+     blogListAndCount.rows.map((blog) => blog.dataValues)
+   )
+
+   // 连表查询1, 基于Blog.belongsTo(User)才可以
+   // 查询blog顺便带上user
+   const blogListWithUser = await Blog.findAndCountAll({
+     order: [['id', 'desc']],
+     include: [
+       {
+         model: User,
+         attributes: ['userName', 'nickName'],
+         where: {
+           userName: 'zhangsan',
+         },
+       },
+     ],
+   })
+   console.log(
+     'blogListWithUser',
+     blogListWithUser.count, // 总数, 不考虑分页
+     // 查询所有数据
+     blogListWithUser.rows.map((blog) => {
+       const blogVal = blog.dataValues
+       // 这里也把user的数据也带上了, 所有不能直接返回
+       blogVal.user = blogVal.user.dataValues
+       return blogVal
+     })
+   )
+
+   // 连表查询2, 基于User.hasMany(Blog)
+   // 查询users, 把存在的blog顺便带出来
+   const userListWithBlog = await User.findAndCountAll({
+     attributes: ['userName', 'nickName'],
+     include: [
+       {
+         model: Blog,
+       },
+     ],
+   })
+   console.log(
+     'userListWithBlog',
+     userListWithBlog.count, // 总数, 不考虑分页
+     // 查询所有数据
+     userListWithBlog.rows.map((user) => {
+       const userVal = user.dataValues
+       userVal.blogs = userVal.blogs.map((blog) => blog.dataValues)
+       return userVal
+     })
+   )
+   ```
+
+3. 改
+
+   ```js
+   const updateResult = await User.update(
+     { nickName: '张三1' },
+     { where: { userName: 'zhangsan' }
+   )
+   console.log('updateResult', updateResult[0])
+   ```
+
+4. 删
+
+   ```js
+   const delBlogRes = Blog.destroy({
+     where: { id: 1 },
+   })
+   console.log('delBlogRes', delBlogRes)
+   // 删除用户的时候, 外键会把相应的博客也删除
+   // 出现问题的时候, 记得把mysql中的删除级联勾选一下
+   ```
 
 #### sequelize 连接池
 
@@ -419,34 +634,34 @@ app.use(
 
 1. 架构图
 
-    <img src="./image/system.png" alt="系统架构图" width="60%">
+<img src="./image/system.png" alt="系统架构图" width="60%">
 
 2. 页面设计图
 
-    <img src="./image/page.png" alt="页面" width="40%">
+<img src="./image/page.png" alt="页面" width="40%">
 
 3. 路由设计
-    <div style="overflow: hidden">
-      <img src="./image/user-router.png" alt="用户路由" width="30%" style="float: left">
+   <div style="overflow: hidden">
+     <img src="./image/user-router.png" alt="用户路由" width="30%" style="float: left">
 
-      <img src="./image/blog-router.png" alt="微博路由" width="34%" style="float: left">
-    </div>
+     <img src="./image/blog-router.png" alt="微博路由" width="34%" style="float: left">
+   </div>
 
-4. 数据模型设计(ER图)
+4. 数据模型设计(ER 图)
 
-    <img src="./image/sql.png" alt="页面" width="60%">
+<img src="./image/sql.png" alt="页面" width="60%">
 
 ### 用户管理(登录注册)
 
 1. git checkout -b feature-login
 
-2. ajv的使用
+2. ajv 的使用
 
 ```js
-  // schema: 校验规则
-  // data: 需要校验的数据
-  var valid = ajv.validate(schema, data);
-  if (!valid) console.log(ajv.errors);
+// schema: 校验规则
+// data: 需要校验的数据
+var valid = ajv.validate(schema, data)
+if (!valid) console.log(ajv.errors)
 ```
 
 ### 用户设置(基本信息, 修改密码, 退出登录)
