@@ -11,7 +11,8 @@ let REDIS_CONF = {
 let MYSQL_CONF = {
   host: 'localhost',
   user: 'root',
-  password: 'het@123',
+  // password: 'het@123',
+  password: '722.616.623wang',
   port: '3306',
   database: 'sina',
 }
@@ -24,7 +25,8 @@ if (isProd) {
   MYSQL_CONF = {
     host: 'localhost',
     user: 'root',
-    password: 'het@123',
+    // password: 'het@123',
+    password: '722.616.623wang',
     port: '3306',
     database: 'sina',
   }

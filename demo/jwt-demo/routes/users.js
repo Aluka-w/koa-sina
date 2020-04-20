@@ -54,3 +54,8 @@ router.get('/getUserInfo', async (ctx, next) => {
 })
 
 module.exports = router
+
+for (let i = 0; i < array.length; i++) {
+  const element = array[i];
+  
+}
