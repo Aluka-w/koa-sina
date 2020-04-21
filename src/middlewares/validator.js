@@ -20,7 +20,7 @@ function genValidator(validateFn) {
       return 
     }
     // 验证成功
-    next()
+    await next()
   } 
   return validator
 }

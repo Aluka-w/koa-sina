@@ -16,7 +16,7 @@
      3. koa-redis: koa连接redis
      4. koa-generic-session: koa生成session的工具
      5. jest: 开发环境下, 测试用例
-     6. supertest: 开发环境下, 测试http接口
+     6. supertest: 开发环境下, jest测试用例测试http接口
      7. mysql2: 连接mysql
      8. sequelize: orm工具, 对象关系映射, 操作mysql工具
      9. eslint: 代码规范
@@ -44,6 +44,7 @@
   6. ctx.cookies
   7. ctx.redirect: 重定向
   8. ctx.url
+  9. ctx.render
 ```
 
 #### koa2 路由
@@ -505,6 +506,7 @@ conf.poor = {
 1. 概念: 单个功能/接口, 给定输入, 得到输出, 看输出是否复合要求
 
    ```js
+     // package.json配置
      // yarn add jest
      // package.json -> scripts
      // runInBand: 按顺序执行
@@ -513,11 +515,39 @@ conf.poor = {
      "test": "cross-env NODE_ENV=dev jest --runInBand --forceExit --colors"
    ```
 
-2. 测试用例文件必须 `*.test.js`结尾
+2. 测试用例文件
+
+   ```txt
+     1. 与src同层级, 建立test文件
+     2. 测试用例文件  *.test.js结尾
+     3. test文件依次执行
+   ```
 
 3. 常用断言
 
+   ```js
+   // 等于
+   expect(res.body.errno).toBe(0)
+   // 不等于
+   expect(res.body.errno).not.toBe(0)
+   ```
+
 4. 测试 http 接口
+
+   ```js
+   // 定义server, 方便测试http请求
+   const request = require('supertest')
+   const server = require('../src/app').callback()
+   // 测试说明
+   test('登录, 应该成功', async () => {
+     // 模拟发送请求
+     const res = await server
+       .post('/api/user/login')
+       .send({ uaerName: '张三', password: '123' })
+     // 断言结果
+     expect(res.body.errno).toBe(0)
+   })
+   ```
 
 ### session-cookie 配置
 
