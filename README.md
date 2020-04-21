@@ -23,8 +23,33 @@
      10. pre-commit: 不符合eslint规范的, 不给于提交(项目工程化)
      11. koa-jwt: jwt的实现, token的验证
      12. jsonwebtoken: 实现用户数据的在server端的加密解密过程
-     13: ajv: Another JSON Schema Validator, 校验规则
+     13. ajv: Another JSON Schema Validator, 校验规则
+     14. formidable-upload-koa: koa图片上传(可查用法)
+     15. fs-extra: fs的extend拓展, 做文件移动
    ```
+
+8. git 指令
+
+   ```shell
+   # 显示提交记录
+   git log
+   # 显示暂存区和工作区的差异
+   git diff
+   # 显示有变更的文件
+   git status
+   # 新建一个分支，并切换到该分支
+   git checkout -b branch-test
+   # 列出所有本地分支和远程分支
+   git branch -a
+   # 合并指定分支到当前分支
+   git merge [branch]
+   # 暂时将未提交的变化移除，稍后再移入
+   git stash
+   # 再移入
+   git stash pop
+   ```
+
+> tips博客: `https://www.cnblogs.com/miracle77hp/articles/11163532.html`
 
 ### KOA2
 
