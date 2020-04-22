@@ -43,7 +43,7 @@ router.post('/login', async (ctx, nex) => {
 })
 
 // 删除
-router.post('/delete', loginCheck, async (ctx, nex) => {
+router.post('/delete', loginCheck, async (ctx, next) => {
   if (isTest) {
     // 测试环境下, 测试账号登录之后, 删除自己(单元测试, 测试完清空测试数据)
     const { userName } = ctx.session.userInfo

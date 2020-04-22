@@ -56,10 +56,51 @@ test('登录, 应该成功', async () => {
   COOKIE = res.headers['set-cookie'].join(';')
 })
 
-// // 删除
-// test('删除用户，应该成功', async () => {
-//   const res = await server
-//     .post('/api/user/delete')
-//     .set('cookie', COOKIE)
-//   expect(res.body.errno).toBe(0)
-// })
+// 修改基本信息
+test('修改用户信息, 应该成功', async () => {
+  const res = await server
+    .patch('/api/user/changeInfo')
+    .send({
+      nickName: '修改昵称',
+      city: '深圳',
+      picture: 'test.png'
+    })
+    .set('cookie', COOKIE) // 设置cookie, 绕过登录验证
+  expect(res.body.errno).toBe(0)
+})
+
+// 修改密码
+test('修改密码, 应该成功', async () => {
+  const res = await server
+    .patch('/api/user/changePassword')
+    .send({
+      password,
+      newPassword: `p_${Date.now()}`
+    })
+    .set('cookie', COOKIE)
+  expect(res.body.errno).toBe(0)
+})
+
+// 删除
+test('删除用户，应该成功', async () => {
+  const res = await server
+    .post('/api/user/delete')
+    .set('cookie', COOKIE)
+  expect(res.body.errno).toBe(0)
+})
+
+// 退出
+test('退出登录, 应该成功', async () => {
+  const res = await server
+    .post('/api/user/logout')
+    .set('cookie', COOKIE)
+  expect(res.body.errno).toBe(0)
+})
+
+// 再次查询用户，应该不存在
+test('删除之后，再次查询注册的用户名，应该不存在', async () => {
+  const res = await server
+    .post('/api/user/isExist')
+    .send({ userName })
+  expect(res.body.errno).not.toBe(0)
+})
