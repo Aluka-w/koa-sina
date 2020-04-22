@@ -14,10 +14,11 @@ const path = require('path')
 const koaStatic = require("koa-static")
 
 // 路由
-const index = require('./routes/index')
+const homeApiRouter = require("./routes/api/blog-home")
 const userViewRouter = require("./routes/view/user")
-const userUtilsRouter = require("./routes/api/utils")
 const userApiRouter = require("./routes/api/user")
+const userUtilsRouter = require("./routes/api/utils")
+const blogViewRouter = require("./routes/view/blog")
 const errorViewRouter = require("./routes/view/error")
 
 // error handler
@@ -73,10 +74,11 @@ app.use(
 )
 
 // routes
-app.use(index.routes(), index.allowedMethods())
+app.use(homeApiRouter.routes(), homeApiRouter.allowedMethods())
 app.use(userViewRouter.routes(), userViewRouter.allowedMethods())
-app.use(userUtilsRouter.routes(), userUtilsRouter.allowedMethods())
 app.use(userApiRouter.routes(), userApiRouter.allowedMethods())
+app.use(userUtilsRouter.routes(), userUtilsRouter.allowedMethods())
+app.use(blogViewRouter.routes(), blogViewRouter.allowedMethods())
 app.use(errorViewRouter.routes(), errorViewRouter.allowedMethods()) // error 404的路由一定在最后
 
 // error-handling

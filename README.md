@@ -26,6 +26,7 @@
      13. ajv: Another JSON Schema Validator, 校验规则
      14. formidable-upload-koa: koa图片上传(可查用法)
      15. fs-extra: fs的extend拓展, 做文件移动
+     16. xss: 防止xss攻击
    ```
 
 8. git 指令
@@ -725,7 +726,9 @@ if (!valid) console.log(ajv.errors)
 
 #### 上传文件
 
-#### 统一文件服务00
+#### 统一文件服务
+
+图片不应该存储在服务器的某个文件夹, 小型公司有第三方(七牛云, 腾讯云), 大型公司有自己的
 
 ### 创建微博
 
