@@ -53,15 +53,48 @@ async function createUser({ userName, password, gender = 3, nickName }) {
 async function deleteUser(userName) {
   const result = await User.destroy({
     where: {
-      userName
-    }
+      userName,
+    },
   })
   // resule 删除的行数
+  return result > 0
+}
+
+async function updateUser(
+  { newNickName, newCity, newPicture, newPassword },
+  { userName, password }
+) {
+  // 拼接修改的内容
+  const updateDate = {}
+  if (newNickName) {
+    updateDate.nickName = newNickName
+  }
+  if (newCity) {
+    updateDate.city = newCity
+  }
+  if (newPicture) {
+    updateDate.picture = newPicture
+  }
+  if (newPassword) {
+    updateDate.password = newPassword
+  }
+  // 拼接查询条件
+  const whereOpt = {
+    userName,
+  }
+  if (password) {
+    whereOpt.password = password
+  }
+  // 执行语句
+  const result = await User.update(updateDate, {
+    where: whereOpt
+  })
   return result > 0
 }
 
 module.exports = {
   getUserInfo,
   createUser,
-  deleteUser
+  deleteUser,
+  updateUser,
 }

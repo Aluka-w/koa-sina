@@ -2,16 +2,23 @@
  * @description user controller
  * @author Matt
  */
-const { getUserInfo, createUser, deleteUser } = require("../services/user")
-const { SuccessModel, ErrorModel } = require("../model/ResModel")
-const doCrypto = require("../util/cryp")
+const {
+  getUserInfo,
+  createUser,
+  deleteUser,
+  updateUser,
+} = require('../services/user')
+const { SuccessModel, ErrorModel } = require('../model/ResModel')
+const doCrypto = require('../util/cryp')
 const {
   registerUserNameNotExistInfo,
   registerUserNameExistInfo,
   registerFailInfo,
   loginFailInfo,
-  deleteUserFailInfo
-} = require("../model/ErrorInfo")
+  deleteUserFailInfo,
+  changeInfoFailInfo,
+  changePasswordFailInfo,
+} = require('../model/ErrorInfo')
 /**
  * 用户名是否存在
  * @param {string} userName 用户名
@@ -81,9 +88,66 @@ async function deleteCurUser(userName) {
   return new ErrorModel(deleteUserFailInfo)
 }
 
+/**
+ * 更改用户信息
+ * @param {Object} ctx ctx
+ * @param {string} ninckName 昵称
+ * @param {string} city 城市
+ * @param {string} picture 图片
+ */
+async function changeInfo(ctx, { nickName, city, picture }) {
+  const { userName } = ctx.session.userInfo
+  if (!nickName) {
+    nickName = userName
+  }
+  // 更新成功返回ture
+  const result = await updateUser(
+    {
+      newNickName: nickName,
+      newCity: city,
+      newPicture: picture,
+    },
+    { userName }
+  )
+  if (result) {
+    Object.assign(ctx.session.userInfo, { nickName, city, picture })
+    return new SuccessModel()
+  }
+  return new ErrorModel(changeInfoFailInfo)
+}
+
+/**
+ * 更改密码
+ * @param {string} userName 用户名
+ * @param {string} password 密码
+ * @param {string} newPassword 新密码
+ */
+async function changePassword({ userName, password, newPassword }) {
+  const result = await updateUser(
+    { newPassword: doCrypto(newPassword) },
+    { userName, password: doCrypto(password) }
+  )
+  if (result) {
+    return new SuccessModel()
+  }
+  return new ErrorModel(changePasswordFailInfo)
+}
+
+/**
+ * 登出
+ * @param {ctx} ctx ctx
+ */
+async function logout(ctx) {
+  delete ctx.session.userInfo
+  return new SuccessModel()
+}
+
 module.exports = {
   isExist,
   register,
   login,
-  deleteCurUser
+  deleteCurUser,
+  changeInfo,
+  changePassword,
+  logout
 }
