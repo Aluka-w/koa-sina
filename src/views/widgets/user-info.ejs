@@ -26,7 +26,7 @@ $(function () {
     // 按钮，显示和隐藏
     var $btnFollow = $('#btn-follow')
     var $btnUnFollow = $('#btn-un-follow')
-    if (<%= !isMe%>) {
+    if (<%= !isMe %>) {
         // 不是当前用户，则显示“关注”或者“取消关注”
         if (<%= locals.amIFollowed%>) {
             $btnUnFollow.show()

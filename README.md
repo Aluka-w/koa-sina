@@ -28,6 +28,7 @@
      15. fs-extra: fs的extend拓展, 做文件移动
      16. xss: 防止xss攻击
      17. date-fns: 时间格式的处理(不重要)
+     18. ejs: js直接生成html的工具
    ```
 
 8. git 指令
