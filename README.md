@@ -27,6 +27,7 @@
      14. formidable-upload-koa: koa图片上传(可查用法)
      15. fs-extra: fs的extend拓展, 做文件移动
      16. xss: 防止xss攻击
+     17. date-fns: 时间格式的处理(不重要)
    ```
 
 8. git 指令
@@ -50,7 +51,7 @@
    git stash pop
    ```
 
-> tips博客: `https://www.cnblogs.com/miracle77hp/articles/11163532.html`
+> tips 博客: `https://www.cnblogs.com/miracle77hp/articles/11163532.html`
 
 ### KOA2
 
@@ -68,7 +69,7 @@
   4. ctx.params
   5. ctx.session
   6. ctx.cookies
-  7. ctx.redirect: 重定向
+  7. ctx.redirect: 重定向ctx.redirect('/login')
   8. ctx.url
   9. ctx.render
 ```
