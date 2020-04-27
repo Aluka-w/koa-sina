@@ -21,7 +21,7 @@ const set = (key, val, timeOut = 60 * 60) => {
     val = JSON.stringify(val)
   }
   redisClient.set(key, val)
-  redisClient.setrange(timeOut)
+  redisClient.expire(key, timeOut)
 }
 
 /**

@@ -8,8 +8,8 @@ const { getBlogListStr } = require('../../util/blog')
 
 router.prefix('/api/square')
 
-router.get('/square/:pageIndex', loginCheck, async(ctx, next) => {
-  const { pageIndex } = ctx.params
+router.get('/loadMore/:pageIndex', loginCheck, async(ctx, next) => {
+  let { pageIndex } = ctx.params
   pageIndex = parseInt(pageIndex)
   const result = await getSquareBlogList(pageIndex)
   // 渲染模板
