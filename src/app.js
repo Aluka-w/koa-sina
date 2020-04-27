@@ -16,6 +16,7 @@ const koaStatic = require("koa-static")
 // 路由
 const homeApiRouter = require("./routes/api/blog-home")
 const profileApiRouter = require("./routes/api/blog-profile")
+const blogSquareRouter = require("./routes/api/blog-square")
 const userViewRouter = require("./routes/view/user")
 const userApiRouter = require("./routes/api/user")
 const userUtilsRouter = require("./routes/api/utils")
@@ -77,6 +78,7 @@ app.use(
 // routes
 app.use(homeApiRouter.routes(), homeApiRouter.allowedMethods())
 app.use(profileApiRouter.routes(), profileApiRouter.allowedMethods())
+app.use(blogSquareRouter.routes(), blogSquareRouter.allowedMethods())
 app.use(userViewRouter.routes(), userViewRouter.allowedMethods())
 app.use(userApiRouter.routes(), userApiRouter.allowedMethods())
 app.use(userUtilsRouter.routes(), userUtilsRouter.allowedMethods())
