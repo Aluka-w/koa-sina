@@ -3,5 +3,5 @@
  */
 module.exports = {
   USER_NAME: "zhangsan",
-  Z_COOKIE: 'weibo.sid=OCWSw0ONf4X1gcU-FyzjojGyQJNjH5FW; weibo.sid.sig=hRKqdWXqqSYPQzS85Z45h4e16SM;'
+  Z_COOKIE: 'weibo.sid=C8QwHBkg8rbcFD3C7tJmnXsdRTNMY4yF; weibo.sid.sig=KDHcKuNvKsGVCPi8FB6wkpFEz6M'
 }

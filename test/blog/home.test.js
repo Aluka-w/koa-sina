@@ -7,7 +7,7 @@ const { Z_COOKIE } = require('../testUserInfo')
 // 存储微博 id
 let BLOG_ID = ''
 
-test('创建一条微博，应该成功', async () => {
+test('创建一条微博, 记得重新设置cookie，应该成功', async () => {
   // 定义测试内容
   const content = '单元测试自动创建的微博_' + Date.now()
   const image = '/xxx.png'

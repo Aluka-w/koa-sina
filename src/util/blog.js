@@ -22,7 +22,6 @@ function getBlogListStr(blogList = [], canReply = false) {
     canReply,
   })
 }
-
 module.exports = {
   getBlogListStr,
 }

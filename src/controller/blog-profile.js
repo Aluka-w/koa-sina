@@ -11,11 +11,11 @@ const { SuccessModel } = require('../model/ResModel')
  * @param {string} userName 用户名
  * @param {number} pageInex 当前页
  */
-async function getProfileBlogList(userName, pageInex = 0) {
+async function getProfileBlogList(userName, pageIndex = 0) {
   const result = await getBlogListByUser({
     userName,
-    pageInex,
-    PAGE_SIZE,
+    pageIndex,
+    pageSize: PAGE_SIZE,
   })
   const blogList = result.blogList
 
@@ -24,7 +24,7 @@ async function getProfileBlogList(userName, pageInex = 0) {
     isEmpty: blogList.length === 0,
     blogList,
     pageSize: PAGE_SIZE,
-    pageInex,
+    pageIndex,
     count: result.count
   })
 }
