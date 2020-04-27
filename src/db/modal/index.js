@@ -20,4 +20,5 @@ User.hasMany(UserRelation, {
 module.exports = {
   User,
   Blog,
+  UserRelation
 }
