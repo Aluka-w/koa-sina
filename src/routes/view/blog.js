@@ -7,7 +7,7 @@ const { loginRedirect } = require('../../middlewares/loginCheckx')
 const { getProfileBlogList } = require('../../controller/blog-profile')
 const { getSquareBlogList } = require('../../controller/blog-square')
 const { isExist } = require('../../controller/user')
-const { getFans } = require('../../controller/user-relation')
+const { getFans, getFollowers } = require('../../controller/user-relation')
 
 // 首页
 router.get('/', loginRedirect, async (ctx, next) => {
@@ -48,6 +48,10 @@ router.get('/profile/:userName', loginRedirect, async (ctx, next) => {
   const fansResult = await getFans(curInfo.id)
   const { count: fansCount, list: fansList } = fansResult.data
 
+  // 获取关注人
+  const followersResult = await getFollowers(curInfo.id)
+  const { count: followCount, userList: followList } = followersResult.data
+  
   // 我是否关注了此人
   const amIFollowed = fansList.some(item => {
     return item.userName === myUserName
@@ -67,6 +71,10 @@ router.get('/profile/:userName', loginRedirect, async (ctx, next) => {
       fansData: {
         count: fansCount,
         list: fansList
+      },
+      followersData: {
+        count: followCount,
+        list: followList
       },
       amIFollowed
     },

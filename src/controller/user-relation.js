@@ -3,6 +3,7 @@
  */
 const {
   getUsersByFollower,
+  getFollowersByUser,
   addFollower,
   deleteFollower,
 } = require('../services/user-relation')
@@ -21,6 +22,14 @@ async function getFans(userId) {
   return new SuccessModel({
     count,
     list,
+  })
+}
+
+async function getFollowers(userId) {
+  const { count, userList } = await getFollowersByUser(userId)
+  return new SuccessModel({
+    count,
+    userList,
   })
 }
 
@@ -54,6 +63,7 @@ async function unFollow(myUserId, curUserId) {
 
 module.exports = {
   getFans,
+  getFollowers,
   follow,
   unFollow,
 }
