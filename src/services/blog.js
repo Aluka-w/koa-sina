@@ -60,6 +60,11 @@ async function getBlogListByUser({ userName, pageIndex = 0, pageSize = 10 }) {
   }
 }
 
+
+// async function getFooy (params) {
+  
+// }
+
 module.exports = {
   createBlog,
   getBlogListByUser,

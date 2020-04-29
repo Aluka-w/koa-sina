@@ -10,8 +10,33 @@ const { isExist } = require('../../controller/user')
 const { getFans, getFollowers } = require('../../controller/user-relation')
 
 // 首页
-router.get('/', loginRedirect, async (ctx, next) => {
-  await ctx.render('index', {})
+router.get('/', loginRedirect, async (ctx, next) => {// 登录用户信息
+  const userInfo = ctx.session.userInfo
+  const {id: userId } = userInfo
+
+  // 获取第一页数据
+ 
+  // 获取粉丝
+  const fansResult = await getFans(userId)
+  const { count: fansCount, list: fansList } = fansResult.data
+
+  // 获取关注人
+  const followersResult = await getFollowers(userId)
+  const { count: followCount, userList: followList } = followersResult.data
+
+  await ctx.render('index', {
+    userData: {
+      userInfo,
+      fansData: {
+        count: fansCount,
+        list: fansList
+      },
+      followersData: {
+        count: followCount,
+        list: followList
+      }
+    },
+  })
 })
 
 // 个人主页

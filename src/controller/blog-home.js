@@ -17,6 +17,16 @@ async function create({ content, image, userId }) {
   }
 }
 
+/**
+ * 获取首页微博列表
+ * @param {number} userId userId
+ * @param {number} pageIndex pageIndex
+ */
+async function getHomeBlogList(userId, pageIndex = 0) {
+  
+}
+
 module.exports = {
   create,
+  getHomeBlogList
 }
